@@ -2,16 +2,9 @@ import { conn } from '@/libs/mysql';
 import { NextResponse } from "next/server"
 import { BoardProps,ResultProps } from '@/app/interfaces/interfaces';
 
-interface RestProps {
-    params: {
-        boardId: string
-    }
-}
 
 
-
-
-export const GET = async (__: Request, { params }: RestProps) => {
+export const GET = async (__: Request, { params }:{params:Promise<{boardId:string}>}) => {
     try {
         const { boardId } = await params
 
@@ -39,7 +32,7 @@ export const GET = async (__: Request, { params }: RestProps) => {
     }
 }
 
-export const PUT = async (request: Request, { params }: RestProps) => {
+export const PUT = async (request: Request, { params }:{params:Promise<{boardId:string}>}) => {
     try {
         const data = await request.json()
 
@@ -69,7 +62,7 @@ export const PUT = async (request: Request, { params }: RestProps) => {
     }
 }
 
-export const DELETE = async (__: Request, { params }: RestProps) => {
+export const DELETE = async (__: Request, { params }:{params:Promise<{boardId:string}>}) => {
     try {
         const { boardId } = await params
         const result: ResultProps = await conn.query('DELETE FROM board WHERE board_id = ?', [boardId])
