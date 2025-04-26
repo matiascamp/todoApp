@@ -2,13 +2,8 @@ import { conn } from "@/libs/mysql";
 import { NextResponse } from "next/server";
 import { ResultProps } from "@/app/interfaces/interfaces";
 
-interface RestProps  {
-    params: {
-        taskId: number
-    }
-}
 
-export const PUT = async (request: Request, { params }: RestProps) => {
+export const PUT = async (request: Request,{ params }:{params:Promise<{taskId:string}>}) => {
     try {
         const { taskId } = await params
         const data = await request.json()
@@ -37,7 +32,7 @@ export const PUT = async (request: Request, { params }: RestProps) => {
     }
 }
 
-export const DELETE = async (__: Request, { params }: RestProps) => {
+export const DELETE = async (__: Request, { params }:{params:Promise<{taskId:string}>}) => {
     try {
         const { taskId } = await params
         const result: ResultProps = await conn.query('DELETE FROM tasks WHERE task_id = ?', [taskId])
