@@ -29,13 +29,14 @@ const BoardHeader = ({ boardName, boardDescription, boardId,onUpdate }: BoardHea
         setDescription(boardDescription)
         setIsEditing(false)
     }
+    
 
     return (
         <div className="board-header flex  gap-1 my-6">
             <div className="flex flex-col items-start gap-2">
                 <div className="flex flex-row gap-2">
 
-                    <Image src="/Logo.svg" alt="Task Board Logo" width={32} height={32} />
+                    {!boardName || !name ? <></> : <Image src="/Logo.svg" alt="Task Board Logo" width={32} height={32} />}
                     {isEditing ? (
                         <input type="text"
                             value={name}
@@ -47,7 +48,7 @@ const BoardHeader = ({ boardName, boardDescription, boardId,onUpdate }: BoardHea
                         <h1 className="text-4xl font-semibold">{name}</h1>
                     )}
                     {
-                        !isEditing && (
+                       boardName && !isEditing && (
                             <button onClick={() => setIsEditing(true)}
                                 className="edit-button ml-2 cursor-pointer"
                             >

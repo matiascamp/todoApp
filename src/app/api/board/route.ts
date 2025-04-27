@@ -1,18 +1,17 @@
 import { conn } from "@/libs/mysql"
 import { NextResponse } from "next/server"
+import { ResultSetHeader } from 'mysql2'
 
-interface QueryResult {
-    insertId: number
-}
+
 
 export const POST = async (request: Request) => {
     try {
         const { boardName, boardDescription } = await request.json()
         
-        const boardResult = await conn.query('INSERT INTO board SET ?', {
+        const [boardResult] = await conn.query<ResultSetHeader>('INSERT INTO board SET ?', {
             board_name: boardName,
             board_description: boardDescription
-        }) as QueryResult
+        }) 
         
         const boardId = boardResult.insertId
         

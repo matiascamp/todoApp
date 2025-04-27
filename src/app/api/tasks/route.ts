@@ -1,13 +1,13 @@
 import { conn } from "@/libs/mysql"
 import { NextResponse } from "next/server"
-import { ResultProps } from "@/app/interfaces/interfaces"
+import { ResultSetHeader } from "mysql2";
 
 export const POST = async (request: Request) => {
     try {
         const { taskName, taskDescription, taskStatus, taskIcon, boardId } = await request.json()
 
         
-        const result:ResultProps = await conn.query('INSERT INTO tasks SET ?', {
+        const [result] = await conn.query<ResultSetHeader>('INSERT INTO tasks SET ?', {
             task_name: taskName,
             task_description: taskDescription,
             task_status: taskStatus,

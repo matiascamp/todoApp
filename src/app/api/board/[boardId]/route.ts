@@ -1,17 +1,18 @@
 import { conn } from '@/libs/mysql';
 import { NextResponse } from "next/server"
-import { BoardProps,ResultProps } from '@/app/interfaces/interfaces';
+import { ResultSetHeader } from 'mysql2';
 
 
 
 export const GET = async (__: Request, { params }:{params:Promise<{boardId:string}>}) => {
     try {
         const { boardId } = await params
-
-        const selectedBoard = await conn.query('SELECT * FROM board WHERE board_id = ?', [boardId]) as BoardProps[]
+            
+        const [selectedBoard] = await conn.query('SELECT * FROM board WHERE board_id = ?', [boardId]) 
         
-        if (selectedBoard.length) {
-            const tasksFromSelectedBoard = await conn.query('SELECT task_id,task_name,task_description,task_status,task_icon,board_id FROM tasks WHERE board_id = ?', [boardId])
+        
+        if (Object.keys(selectedBoard).length) {
+            const [tasksFromSelectedBoard] = await conn.query('SELECT task_id,task_name,task_description,task_status,task_icon,board_id FROM tasks WHERE board_id = ?', [boardId])
 
             return NextResponse.json({
                 board: selectedBoard,
@@ -38,7 +39,8 @@ export const PUT = async (request: Request, { params }:{params:Promise<{boardId:
 
         const {boardId} = await params
         
-        const result:ResultProps = await conn.query('UPDATE board SET ? WHERE board_id = ?',[data,boardId])
+        const [result] = await conn.query<ResultSetHeader>('UPDATE board SET ? WHERE board_id = ?',[data,boardId])
+
         
         if (result.affectedRows === 0) {
             return NextResponse.json(
@@ -51,7 +53,7 @@ export const PUT = async (request: Request, { params }:{params:Promise<{boardId:
             )
         }
         
-        const updateBoard = await conn.query('SELECT * FROM board WHERE board_id = ?',[boardId])
+        const [updateBoard] = await conn.query('SELECT * FROM board WHERE board_id = ?',[boardId])
         
         return NextResponse.json(updateBoard)
 
@@ -65,7 +67,7 @@ export const PUT = async (request: Request, { params }:{params:Promise<{boardId:
 export const DELETE = async (__: Request, { params }:{params:Promise<{boardId:string}>}) => {
     try {
         const { boardId } = await params
-        const result: ResultProps = await conn.query('DELETE FROM board WHERE board_id = ?', [boardId])
+        const [result] = await conn.query<ResultSetHeader>('DELETE FROM board WHERE board_id = ?', [boardId])
 
         if (result.affectedRows === 0) {
             return NextResponse.json({

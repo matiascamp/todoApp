@@ -13,7 +13,7 @@ const Board = () => {
     const [showSidebar, setShowSidebar] = useState(false)
     const { loading, board, updateBoard } = todoStore()
 
-    if (loading) return <Loading/>;
+    if (loading) return <Loading />;
 
     if (!board) return <div>No hay datos del tablero disponibles</div>;
 
@@ -53,20 +53,22 @@ const Board = () => {
 
                 <div className="space-y-4">
                     {tasks.length > 0 ? (
-                        tasks.map((task: TaskProps) => (
-                            <Tasks
-                                key={task.task_id}
-                                type={task.task_status as TaskType}
-                                title={task.task_name}
-                                description={task.task_description}
-                                icon={task.task_icon}
-                                setShowSidebar={setShowSidebar}
-                            />
-                        ))
+                        <>
+                            {tasks.map((task: TaskProps) => (
+                                <Tasks
+                                    key={task.task_id}
+                                    type={task.task_status as TaskType}
+                                    title={task.task_name}
+                                    description={task.task_description}
+                                    icon={task.task_icon}
+                                    setShowSidebar={setShowSidebar}
+                                />
+                            ))}
+                            <NewTask />
+                        </>
                     ) : (
-                        <div>No hay tareas disponibles</div>
+                        <div className="w-full h-feull flex items-center justify-center text-xl font-bold">Not available board</div>
                     )}
-                    <NewTask />
                 </div>
             </main>
             <SideBar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
